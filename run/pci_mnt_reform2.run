@@ -1,0 +1,153 @@
+assert_spec arm_v8a
+
+create_boot_directory
+#import_from_depot [depot_user]/src/[base_src] \
+#                  [depot_user]/src/init \
+#                  [depot_user]/src/platform_drv \
+#                  [depot_user]/src/report_rom
+
+build { 
+	core init timer
+	drivers/platform/imx8mq
+	server/report_rom
+	drivers/gpio/imx/spec/arm_v8
+	drivers/pci_drv
+}
+
+install_config {
+<config>
+	<parent-provides>
+		<service name="ROM"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="CPU"/>
+		<service name="LOG"/>
+	</parent-provides>
+	<default caps="100"/>
+
+	<start name="platform_drv">
+		<binary name="imx8mq_platform_drv"/>
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Platform"/></provides>
+		<config>
+			<device name="gpio3">
+				<io_mem address="0x30220000" size="0x10000"/>
+				<irq number="100"/>
+				<irq number="101"/>
+			</device>
+
+			<device name="gpio5">
+				<io_mem address="0x30240000" size="0x10000"/>
+				<irq number="104"/>
+				<irq number="105"/>
+			</device>
+
+			<device name="pcie_1">
+				<io_mem       address="0x33800000" size="0x400000"/>
+				<io_mem       address="0x1ff00000" size="0x100000"/>
+				<irq          number="154"/>
+				<power-domain name="pcie_1"/>
+				<clock        name="pcie1_ctrl_clk_root"
+				              parent="system_pll2_div4"/>
+				<clock        name="pcie1_phy_clk_root"
+				              parent="system_pll2_div10"/>
+				<clock        name="pcie1_aux_clk_root"/>
+				<clock        name="pcie_gate"/>
+			</device>
+
+			<device name="pcie_phy_reset_1" type="reset-pin,phy">
+				<reset-domain name="pcie_1_phy"/>
+			</device>
+
+			<device name="pcie_core_reset_1" type="reset-pin,core">
+				<reset-domain name="pcie_1_core"/>
+			</device>
+
+			<device name="pcie_2">
+				<io_mem       address="0x33c00000" size="0x400000"/>
+				<io_mem       address="0x27f00000" size="0x100000"/>
+				<irq          number="106"/>
+				<power-domain name="pcie_2"/>
+				<clock        name="pcie2_ctrl_clk_root"
+				              parent="system_pll2_div4"/>
+				<clock        name="pcie2_phy_clk_root"
+				              parent="system_pll2_div10"/>
+				<clock        name="pcie2_aux_clk_root"/>
+				<clock        name="pcie_gate"/>
+			</device>
+
+			<device name="pcie_phy_reset_2" type="reset-pin,phy">
+				<reset-domain name="pcie_2_phy"/>
+			</device>
+
+			<device name="pcie_core_reset_2" type="reset-pin,core">
+				<reset-domain name="pcie_2_core"/>
+			</device>
+
+
+			<policy label="imx8mq_pci_drv -> " info="yes">
+				<device name="pcie_1"/>
+				<device name="pcie_phy_reset_1"/>
+				<device name="pcie_core_reset_1"/>
+			</policy>
+
+			<policy label="gpio_drv -> " info="yes">
+				<device name="gpio5"/>
+			</policy>
+		</config>
+		<route>
+			<any-service> <parent/> </any-service>
+		</route>
+	</start>
+
+	<start name="timer">
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Timer"/></provides>
+		<route> <any-service> <parent/> </any-service> </route>
+	</start>
+
+	<start name="report_rom">
+		<resource name="RAM" quantum="2M"/>
+		<provides> <service name="Report"/> <service name="ROM"/> </provides>
+		<config verbose="yes">
+		</config>
+		<route> <any-service> <parent/> </any-service> </route>
+	</start>
+
+	<start name="gpio_drv" caps="150">
+		<binary name="imx_gpio_drv"/>
+		<resource name="RAM" quantum="2M"/>
+		<provides><service name="Gpio"/></provides>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Platform"> <child name="platform_drv"/> </service>
+		</route>
+		<config/>
+	</start>
+
+	<start name="imx8mq_pci_drv">
+		<resource name="RAM" quantum="1M"/>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Platform"> <child name="platform_drv"/> </service>
+			<service name="Timer">    <child name="timer"/>        </service>
+			<service name="Gpio">     <child name="gpio_drv"/>     </service>
+		</route>
+	</start>
+</config> }
+
+build_boot_image { imx8mq_pci_drv imx_gpio_drv core init timer report_rom imx8mq_platform_drv }
+
+run_genode_until forever
+
+# vi: set ft=tcl :
