@@ -10,8 +10,10 @@ build {
 	core init timer
 	drivers/platform/imx8mq
 	server/report_rom
+	server/part_block
 	drivers/gpio/imx/spec/arm_v8
 	drivers/pci_drv
+	drivers/nvme
 }
 
 install_config {
@@ -55,19 +57,13 @@ install_config {
 				              parent="system_pll2_div10"/>
 				<clock        name="pcie1_aux_clk_root"/>
 				<clock        name="pcie_gate"/>
-			</device>
-
-			<device name="pcie_phy_reset_1" type="reset-pin,phy">
 				<reset-domain name="pcie_1_phy"/>
-			</device>
-
-			<device name="pcie_core_reset_1" type="reset-pin,core">
 				<reset-domain name="pcie_1_core"/>
 			</device>
 
 			<device name="pcie_2">
 				<io_mem       address="0x33c00000" size="0x400000"/>
-				<io_mem       address="0x27f00000" size="0x100000"/>
+				<io_mem       address="0x27f00000" size="0x80000"/>
 				<irq          number="106"/>
 				<power-domain name="pcie_2"/>
 				<clock        name="pcie2_ctrl_clk_root"
@@ -75,26 +71,26 @@ install_config {
 				<clock        name="pcie2_phy_clk_root"
 				              parent="system_pll2_div10"/>
 				<clock        name="pcie2_aux_clk_root"/>
-				<clock        name="pcie_gate"/>
-			</device>
-
-			<device name="pcie_phy_reset_2" type="reset-pin,phy">
+				<clock        name="pcie2_gate"/>
 				<reset-domain name="pcie_2_phy"/>
-			</device>
-
-			<device name="pcie_core_reset_2" type="reset-pin,core">
 				<reset-domain name="pcie_2_core"/>
 			</device>
 
+			<device name="pcie_2_dev">
+				<io_mem       address="0x20100000" size="0x100000"/>
+				<irq          number="109"/>
+			</device>
 
 			<policy label="imx8mq_pci_drv -> " info="yes">
-				<device name="pcie_1"/>
-				<device name="pcie_phy_reset_1"/>
-				<device name="pcie_core_reset_1"/>
+				<device name="pcie_2"/>
 			</policy>
 
 			<policy label="gpio_drv -> " info="yes">
-				<device name="gpio5"/>
+				<device name="gpio3"/>
+			</policy>
+
+			<policy label="nvme_drv -> " info="yes">
+				<device name="pcie_2_dev"/>
 			</policy>
 		</config>
 		<route>
@@ -128,11 +124,14 @@ install_config {
 			<service name="LOG">      <parent/> </service>
 			<service name="Platform"> <child name="platform_drv"/> </service>
 		</route>
-		<config/>
+		<config>
+			<gpio num="23" mode="O" value="1"/>
+		</config>
 	</start>
 
 	<start name="imx8mq_pci_drv">
 		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Platform"/></provides>
 		<route>
 			<service name="RM">       <parent/> </service>
 			<service name="ROM">      <parent/> </service>
@@ -143,10 +142,49 @@ install_config {
 			<service name="Timer">    <child name="timer"/>        </service>
 			<service name="Gpio">     <child name="gpio_drv"/>     </service>
 		</route>
+		<config>
+			<policy label="nvme_drv -> "> <device name="1:0:0"/> </policy>
+			<!--<policy label="nvme_drv -> "> <device pci_class="NVME"/> </policy>-->
+		</config>
+	</start>
+
+	<start name="nvme_drv">
+		<resource name="RAM" quantum="4M"/>
+		<provides> <service name="Block"/> </provides>
+		<config>
+			<report namespace="yes"/>
+			<default-policy writeable="yes"/>
+		</config>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Platform"> <child name="platform_drv"/> </service>
+			<service name="Timer">    <child name="timer"/>        </service>
+			<service name="Report">   <child name="report_rom"/> </service>
+		</route>
+	</start>
+
+	<start name="part_block">
+		<resource name="RAM" quantum="10M"/>
+		<provides> <service name="Block"/> </provides>
+		<config> <report partitions="yes"/> </config>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Timer">    <child name="timer"/>    </service>
+			<service name="Block">    <child name="nvme_drv"/> </service>
+			<service name="Report">   <child name="report_rom"/> </service>
+		</route>
 	</start>
 </config> }
 
-build_boot_image { imx8mq_pci_drv imx_gpio_drv core init timer report_rom imx8mq_platform_drv }
+build_boot_image { imx8mq_pci_drv imx_gpio_drv nvme_drv core init timer report_rom imx8mq_platform_drv part_block }
 
 run_genode_until forever
 
