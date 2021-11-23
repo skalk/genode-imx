@@ -76,11 +76,6 @@ install_config {
 				<reset-domain name="pcie_2_core"/>
 			</device>
 
-			<device name="pcie_2_dev">
-				<io_mem       address="0x20100000" size="0x100000"/>
-				<irq          number="109"/>
-			</device>
-
 			<policy label="imx8mq_pci_drv -> " info="yes">
 				<device name="pcie_2"/>
 			</policy>
