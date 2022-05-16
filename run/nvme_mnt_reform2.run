@@ -1,0 +1,147 @@
+assert_spec arm_v8a
+
+create_boot_directory
+import_from_depot [depot_user]/src/[base_src] \
+                  [depot_user]/src/init \
+                  [depot_user]/src/platform_drv \
+                  [depot_user]/src/imx8mq_platform_drv \
+                  [depot_user]/src/imx8mq_pci_host_drv \
+                  [depot_user]/src/nvme_drv \
+                  [depot_user]/src/part_block \
+                  [depot_user]/src/report_rom \
+                  [depot_user]/raw/mnt_reform2-devices
+
+build { drivers/gpio/imx/spec/arm_v8 }
+
+install_config {
+<config>
+	<parent-provides>
+		<service name="ROM"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="CPU"/>
+		<service name="LOG"/>
+	</parent-provides>
+	<default caps="100"/>
+
+	<start name="report_rom">
+		<resource name="RAM" quantum="2M"/>
+		<provides> <service name="Report"/> <service name="ROM"/> </provides>
+		<config verbose="yes">
+			<policy label="pci_platform_drv -> devices"
+			        report="imx8mq_pci_host_drv -> devices"/>
+		</config>
+		<route> <any-service> <parent/> </any-service> </route>
+	</start>
+
+	<start name="platform_drv" managing_system="yes">
+		<binary name="imx8mq_platform_drv"/>
+		<resource name="RAM" quantum="2M"/>
+		<provides><service name="Platform"/></provides>
+		<config>
+			<policy label="imx8mq_pci_host_drv -> " info="yes">
+				<device name="pcie_1"/>
+				<device name="pcie_2"/>
+			</policy>
+			<policy label="gpio_drv -> ">            <device name="gpio3"/> </policy>
+		</config>
+		<route>
+			<any-service> <parent/> </any-service>
+		</route>
+	</start>
+
+	<start name="timer">
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Timer"/></provides>
+		<route> <any-service> <parent/> </any-service> </route>
+	</start>
+
+	<start name="gpio_drv" caps="150">
+		<binary name="imx_gpio_drv"/>
+		<resource name="RAM" quantum="2M"/>
+		<provides><service name="Gpio"/></provides>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Platform"> <child name="platform_drv"/> </service>
+		</route>
+		<config>
+			<gpio num="23" mode="O" value="1"/>
+		</config>
+	</start>
+
+	<start name="imx8mq_pci_host_drv">
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Platform"/></provides>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Report">   <child name="report_rom"/> </service>
+			<service name="Platform"> <child name="platform_drv"/> </service>
+			<service name="Timer">    <child name="timer"/>        </service>
+			<service name="Gpio">     <child name="gpio_drv"/>     </service>
+		</route>
+	</start>
+
+	<start name="pci_platform_drv" managing_system="yes">
+		<binary name="platform_drv"/>
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Platform"/></provides>
+		<config>
+			<report devices="yes"/>
+			<policy label="nvme_drv -> "> <pci class="NVME"/> </policy>
+		</config>
+		<route>
+			<service name="ROM" label="devices"> <child name="report_rom"/> </service>
+			<service name="Report"> <child name="report_rom"/> </service>
+			<any-service> <parent/> </any-service>
+		</route>
+	</start>
+
+	<start name="nvme_drv">
+		<resource name="RAM" quantum="6M"/>
+		<provides> <service name="Block"/> </provides>
+		<config>
+			<report namespace="yes"/>
+			<default-policy writeable="yes"/>
+		</config>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Platform"> <child name="pci_platform_drv"/> </service>
+			<service name="Timer">    <child name="timer"/>        </service>
+			<service name="Report">   <child name="report_rom"/> </service>
+		</route>
+	</start>
+
+	<start name="part_block">
+		<resource name="RAM" quantum="10M"/>
+		<provides> <service name="Block"/> </provides>
+		<config> <report partitions="yes"/> </config>
+		<route>
+			<service name="RM">       <parent/> </service>
+			<service name="ROM">      <parent/> </service>
+			<service name="PD">       <parent/> </service>
+			<service name="CPU">      <parent/> </service>
+			<service name="LOG">      <parent/> </service>
+			<service name="Timer">    <child name="timer"/>    </service>
+			<service name="Block">    <child name="nvme_drv"/> </service>
+			<service name="Report">   <child name="report_rom"/> </service>
+		</route>
+	</start>
+</config> }
+
+build_boot_image { imx_gpio_drv }
+
+run_genode_until forever
