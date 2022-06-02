@@ -1,0 +1,6 @@
+<launcher pkg="glmark2-imx8q_evk">
+	<route>
+		<service name="Gui"> <child name="themed_wm"/> </service>
+		<service name="Platform" label="gpu"> <parent label="gpu"/> </service>
+	</route>
+</launcher>

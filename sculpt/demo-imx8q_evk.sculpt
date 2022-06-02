@@ -1,0 +1,21 @@
+drivers: imx8q_evk
+
+# supplemental depot content added to the system image
+import: raw/imx8q_evk-devices
+import: src/arm_driver_manager
+import: src/event_filter
+import: src/fec_nic_drv
+import: src/imx8mq_fb_drv
+import: src/imx8mq_platform_drv
+import: src/imx8mq_sd_card_drv
+import: src/imx8mq_usb_host_drv
+import: src/rom_reporter
+import: src/usb_block_drv
+import: src/usb_hid_drv
+
+# selection of launcher-menu entries
+launcher: gpu_demo usb_webcam_view virtualization_demo webbrowser
+
+deploy: demo-imx8q_evk
+usb:    demo-imx8q_evk
+depot:  skalk

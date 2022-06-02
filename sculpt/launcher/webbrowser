@@ -1,0 +1,38 @@
+<launcher name="falkon" pkg="falkon" priority="-2">
+	<route>
+		<service name="Nic">
+			<child name="nic_router"/>
+		</service>
+		<service name="File_system" label="config">
+			<child name="ram_fs"/>
+		</service>
+		<service name="File_system" label="downloads">
+			<child name="ram_fs"/>
+		</service>
+		<service name="Gui">
+			<child name="themed_wm"/>
+		</service>
+		<service name="Report" label="falkon -> shape">
+			<child name="themed_wm"/>
+		</service>
+		<service name="Report" label="clipboard">
+			<child name="themed_wm"/>
+		</service>
+		<service name="ROM" label="clipboard">
+			<child name="themed_wm"/>
+		</service>
+		<service name="Rtc">
+			<child name="sntp_rtc"/>
+		</service>
+		<service name="Audio_out">
+			<child name="black_hole"/>
+		</service>
+		<service name="Audio_in">
+			<child name="black_hole"/>
+		</service>
+		<service name="Capture">
+			<child name="black_hole"/>
+		</service>
+	</route>
+</launcher>
+
