@@ -31,7 +31,7 @@ proc run_image {elf_img} {
 	# Build ext2 image
 	#
 	set size_img [expr [regsub {\s.*} [exec du -b [run_dir]/ext2] {}]]
-	set disk_size_kb [expr (($size_img / 1024) + 1800)]
+	set disk_size_kb [expr {round(($size_img / 1024) * 1.1)}]
 	set part_offset [expr (4 * 1024 * 1024)]
 	exec [installed_command mkfs.ext2] -q -L 'GENODE' -N 0 -E offset=$part_offset -m 5 -r 1 -t ext2 -d [run_dir]/ext2 [run_dir].ext2 [expr $disk_size_kb]k
 
