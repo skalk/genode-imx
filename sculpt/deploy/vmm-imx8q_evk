@@ -1,0 +1,32 @@
+<config arch="">
+
+	<common_routes>
+		<service name="ROM" label_last="ld.lib.so"> <parent/> </service>
+		<service name="ROM" label_last="init">      <parent/> </service>
+		<service name="CPU">   <parent/> </service>
+		<service name="PD">    <parent/> </service>
+		<service name="LOG">   <parent/> </service>
+		<service name="Timer"> <parent/> </service>
+		<service name="TRACE"> <parent/> </service>
+	</common_routes>
+
+	<start name="fonts_fs" priority="-2" pkg="fonts_fs">
+		<route>
+			<service name="ROM" label="config">
+				<parent label="config -> managed/fonts"/>
+			</service>
+		</route>
+	</start>
+
+	<start name="themed_wm" pkg="themed_wm">
+		<route>
+			<service name="Gui"    label="focus"> <parent label="focus"/> </service>
+			<service name="Gui">                           <parent/> </service>
+			<service name="Report" label_last="shape">     <parent/> </service>
+			<service name="Report" label_last="clipboard"> <parent/> </service>
+			<service name="ROM"    label_last="clipboard"> <parent/> </service>
+		</route>
+	</start>
+
+	<start name="virtualization_demo"/>
+</config>
