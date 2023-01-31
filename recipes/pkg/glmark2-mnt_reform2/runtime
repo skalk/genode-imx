@@ -12,7 +12,7 @@
 		<rom label="glmark2"/>
 		<rom label="glmark2_assets.tar"/>
 		<rom label="imx8mq_gpu_drv"/>
-		<rom label="imx8mq_gpu_drv-mnt-reform2.dtb"/>
+		<rom label="imx8mq_gpu_drv-mnt_reform2.dtb"/>
 		<rom label="jpeg.lib.so"/>
 		<rom label="ld.lib.so"/>
 		<rom label="libc.lib.so"/>
@@ -49,7 +49,7 @@
 			</provides>
 			<route>
 				<service name="ROM" label="dtb">
-					<parent label="imx8mq_gpu_drv-mnt-reform2.dtb"/>
+					<parent label="imx8mq_gpu_drv-mnt_reform2.dtb"/>
 				</service>
 				<service name="Platform">
 					<parent label="gpu"/>
@@ -62,7 +62,7 @@
 			<resource name="RAM" quantum="116M"/>
 			<config>
 				<vfs>
-					<dir name="dev"> <log/> </dir>
+					<dir name="dev"> <log/> <gpu/> </dir>
 					<dir name="data">
 						<tar name="glmark2_assets.tar"/>
 					</dir>
