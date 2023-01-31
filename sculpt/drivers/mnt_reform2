@@ -234,7 +234,7 @@
 	<start name="fb_drv" caps="250">
 		<binary name="imx8mq_fb_drv"/>
 		<resource name="RAM" quantum="40M"/>
-		<resource name="CPU" quantum="40"/>
+		<resource name="CPU" quantum="50"/>
 		<route>
 			<service name="ROM" label="dtb"> <parent label="imx8mq_fb_drv-mnt_reform2.dtb"/> </service>
 			<service name="RM">       <parent/> </service>
@@ -252,7 +252,7 @@
 	<start name="usb_drv" caps="200">
 		<binary name="imx8mq_usb_host_drv"/>
 		<resource name="RAM" quantum="16M"/>
-		<resource name="CPU" quantum="40"/>
+		<resource name="CPU" quantum="30"/>
 		<provides> <service name="Usb"/> </provides>
 		<route>
 			<service name="ROM" label="dtb">
@@ -272,6 +272,7 @@
 
 	<start name="usb_hid_drv" caps="140">
 		<resource name="RAM" quantum="11M"/>
+		<resource name="CPU" quantum="10"/>
 		<config use_report="yes" capslock_led="rom" numlock_led="rom"/>
 		<route>
 			<service name="ROM" label="report"> <child name="report_rom"/> </service>
@@ -302,6 +303,7 @@
 
 	<start name="event_filter" caps="90">
 		<resource name="RAM" quantum="2M"/>
+		<resource name="CPU" quantum="10"/>
 		<provides> <service name="Event"/> </provides>
 		<route>
 			<service name="ROM" label="config">        <parent label="event_filter.config"/> </service>
