@@ -1,7 +1,7 @@
 /*
  * \brief  Dummy definitions of Linux Kernel functions
  * \author Automatically generated file - do no edit
- * \date   2021-09-07
+ * \date   2023-04-14
  */
 
 #include <lx_emul.h>
@@ -34,14 +34,6 @@ const char * __clk_get_name(const struct clk * clk)
 #include <linux/kexec.h>
 
 void __noclone __crash_kexec(struct pt_regs * regs)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/ioport.h>
-
-struct resource * __devm_request_region(struct device * dev,struct resource * parent,resource_size_t start,resource_size_t n,const char * name)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -108,14 +100,6 @@ void __put_task_struct(struct task_struct * tsk)
 #include <linux/freezer.h>
 
 bool __refrigerator(bool check_kthr_stop)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pm.h>
-
-void __suspend_report_result(const char * function,void * fn,int ret)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -230,14 +214,6 @@ void cdev_del(struct cdev * p)
 }
 
 
-#include <linux/clk.h>
-
-void clk_bulk_put(int num_clks,struct clk_bulk_data * clks)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
 #include <linux/fs.h>
 
 long compat_ptr_ioctl(struct file * file,unsigned int cmd,unsigned long arg)
@@ -262,6 +238,22 @@ int console_printk[] = {};
 #include <linux/console.h>
 
 void console_unblank(void)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/pm_qos.h>
+
+void cpu_latency_qos_add_request(struct pm_qos_request * req,s32 value)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/pm_qos.h>
+
+void cpu_latency_qos_remove_request(struct pm_qos_request * req)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -355,6 +347,22 @@ int device_wakeup_enable(struct device * dev)
 }
 
 
+#include <linux/extcon.h>
+
+int devm_extcon_register_notifier(struct device * dev,struct extcon_dev * edev,unsigned int id,struct notifier_block * nb)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/reset-controller.h>
+
+int devm_reset_controller_register(struct device * dev,struct reset_controller_dev * rcdev)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/dma-mapping.h>
 
 int dma_mmap_attrs(struct device * dev,struct vm_area_struct * vma,void * cpu_addr,dma_addr_t dma_addr,size_t size,unsigned long attrs)
@@ -423,6 +431,22 @@ enum event_trigger_type event_triggers_call(struct trace_event_file * file,void 
 struct trace_event_functions exit_syscall_print_funcs;
 
 
+#include <linux/extcon.h>
+
+struct extcon_dev * extcon_get_edev_by_phandle(struct device * dev,int index)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/extcon.h>
+
+int extcon_get_state(struct extcon_dev * edev,const unsigned int id)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/kobject.h>
 
 struct kobject *firmware_kobj;
@@ -470,14 +494,6 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
 
 #include <linux/property.h>
 
-struct fwnode_handle * fwnode_create_software_node(const struct property_entry * properties,const struct fwnode_handle * parent)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/property.h>
-
 void fwnode_remove_software_node(struct fwnode_handle * fwnode)
 {
 	lx_emul_trace_and_stop(__func__);
@@ -494,6 +510,22 @@ void * gen_pool_dma_alloc(struct gen_pool * pool,size_t size,dma_addr_t * dma)
 
 #include <linux/genalloc.h>
 
+void * gen_pool_dma_alloc_align(struct gen_pool * pool,size_t size,dma_addr_t * dma,int align)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/genalloc.h>
+
+void * gen_pool_dma_zalloc_align(struct gen_pool * pool,size_t size,dma_addr_t * dma,int align)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/genalloc.h>
+
 void gen_pool_free_owner(struct gen_pool * pool,unsigned long addr,size_t size,void ** owner)
 {
 	lx_emul_trace_and_stop(__func__);
@@ -503,6 +535,46 @@ void gen_pool_free_owner(struct gen_pool * pool,unsigned long addr,size_t size,v
 #include <linux/bug.h>
 
 void generic_bug_clear_once(void)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/gfp.h>
+
+unsigned long get_zeroed_page(gfp_t gfp_mask)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/gpio/consumer.h>
+
+int gpiod_direction_output(struct gpio_desc * desc,int value)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/gpio/consumer.h>
+
+int gpiod_get_value(const struct gpio_desc * desc)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/gpio/consumer.h>
+
+void gpiod_set_value_cansleep(struct gpio_desc * desc,int value)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/gpio/consumer.h>
+
+int gpiod_to_irq(const struct gpio_desc * desc)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -792,6 +864,14 @@ void note_interrupt(struct irq_desc * desc,irqreturn_t action_ret)
 unsigned int nr_node_ids;
 
 
+#include <linux/clk.h>
+
+struct clk * of_clk_get(struct device_node * np,int index)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/serial_core.h>
 
 int __init of_setup_earlycon(const struct earlycon_id * match,unsigned long node,const char * options)
@@ -825,196 +905,7 @@ struct device_type part_type;
 
 #include <linux/pci.h>
 
-int pci_alloc_irq_vectors_affinity(struct pci_dev * dev,unsigned int min_vecs,unsigned int max_vecs,unsigned int flags,struct irq_affinity * affd)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
 struct bus_type pci_bus_type;
-
-
-#include <linux/pci.h>
-
-void pci_clear_mwi(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-void pci_d3cold_disable(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-void pci_dev_put(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-bool pci_dev_run_wake(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-void pci_disable_device(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_enable_device(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-u8 pci_find_capability(struct pci_dev * dev,int cap)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-void pci_free_irq_vectors(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-struct pci_dev * pci_get_device(unsigned int vendor,unsigned int device,struct pci_dev * from)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_irq_vector(struct pci_dev * dev,unsigned int nr)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-const struct pci_device_id * pci_match_id(const struct pci_device_id * ids,struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-const char *pci_power_names[] = {};
-
-
-#include <linux/pci.h>
-
-int pci_prepare_to_sleep(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_read_config_byte(const struct pci_dev * dev,int where,u8 * val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_read_config_dword(const struct pci_dev * dev,int where,u32 * val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_read_config_word(const struct pci_dev * dev,int where,u16 * val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_save_state(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-void pci_set_master(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_set_mwi(struct pci_dev * dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_set_power_state(struct pci_dev * dev,pci_power_t state)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_write_config_byte(const struct pci_dev * dev,int where,u8 val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_write_config_dword(const struct pci_dev * dev,int where,u32 val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/pci.h>
-
-int pci_write_config_word(const struct pci_dev * dev,int where,u16 val)
-{
-	lx_emul_trace_and_stop(__func__);
-}
 
 
 #include <linux/trace_events.h>
@@ -1054,6 +945,14 @@ int pinctrl_pm_select_default_state(struct device * dev)
 #include <linux/pinctrl/consumer.h>
 
 int pinctrl_pm_select_sleep_state(struct device * dev)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/pinctrl/consumer.h>
+
+int pinctrl_select_state(struct pinctrl * p,struct pinctrl_state * state)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -1162,6 +1061,14 @@ void regulator_put(struct regulator * regulator)
 }
 
 
+#include <linux/regulator/consumer.h>
+
+int regulator_set_current_limit(struct regulator * regulator,int min_uA,int max_uA)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/ioport.h>
 
 int release_resource(struct resource * old)
@@ -1173,14 +1080,6 @@ int release_resource(struct resource * old)
 #include <linux/mm.h>
 
 int remap_pfn_range(struct vm_area_struct * vma,unsigned long addr,unsigned long pfn,unsigned long size,pgprot_t prot)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-#include <linux/reset.h>
-
-int reset_control_reset(struct reset_control * rstc)
 {
 	lx_emul_trace_and_stop(__func__);
 }
@@ -1383,6 +1282,14 @@ void smp_send_stop(void)
 }
 
 
+#include <linux/sys_soc.h>
+
+const struct soc_device_attribute * soc_device_match(const struct soc_device_attribute * matches)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/jump_label.h>
 
 bool static_key_initialized;
@@ -1407,6 +1314,22 @@ int string_unescape(char * src,char * dst,size_t size,unsigned int flags)
 #include <linux/printk.h>
 
 int suppress_printk;
+
+
+#include <linux/rcupdate.h>
+
+void synchronize_rcu(void)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/mfd/syscon.h>
+
+struct regmap * syscon_node_to_regmap(struct device_node * np)
+{
+	lx_emul_trace_and_stop(__func__);
+}
 
 
 #include <linux/sysfs.h>
@@ -1612,6 +1535,158 @@ void unregister_irq_proc(unsigned int irq,struct irq_desc * desc)
 }
 
 
+#include <linux/usb/gadget.h>
+
+int usb_add_gadget_udc(struct device * parent,struct usb_gadget * gadget)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_del_gadget_udc(struct usb_gadget * gadget)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+struct usb_request * usb_ep_alloc_request(struct usb_ep * ep,gfp_t gfp_flags)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_ep_clear_halt(struct usb_ep * ep)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_ep_disable(struct usb_ep * ep)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_ep_enable(struct usb_ep * ep)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_ep_fifo_flush(struct usb_ep * ep)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_ep_free_request(struct usb_ep * ep,struct usb_request * req)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_ep_set_halt(struct usb_ep * ep)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_ep_set_maxpacket_limit(struct usb_ep * ep,unsigned maxpacket_limit)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_gadget_giveback_request(struct usb_ep * ep,struct usb_request * req)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_gadget_map_request_by_dev(struct device * dev,struct usb_request * req,int is_in)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_gadget_set_state(struct usb_gadget * gadget,enum usb_device_state state)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_gadget_udc_reset(struct usb_gadget * gadget,struct usb_gadget_driver * driver)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_gadget_unmap_request(struct usb_gadget * gadget,struct usb_request * req,int is_in)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_gadget_unmap_request_by_dev(struct device * dev,struct usb_request * req,int is_in)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_gadget_vbus_connect(struct usb_gadget * gadget)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+int usb_gadget_vbus_disconnect(struct usb_gadget * gadget)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
+#include <linux/usb/gadget.h>
+
+void usb_udc_vbus_handler(struct usb_gadget * gadget,bool status)
+{
+	lx_emul_trace_and_stop(__func__);
+}
+
+
 #include <linux/uuid.h>
 
 const u8 uuid_index[16] = {};
@@ -1655,40 +1730,4 @@ int xen_dbgp_reset_prep(struct usb_hcd * hcd)
 {
 	lx_emul_trace_and_stop(__func__);
 }
-
-struct pinctrl_state *pinctrl_lookup_state(struct pinctrl *p, const char *name)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-struct pinctrl *devm_pinctrl_get(struct device *dev)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-void cpu_latency_qos_remove_request(struct pm_qos_request *req)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-void cpu_latency_qos_add_request(struct pm_qos_request *req, s32 value)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
-
-struct regulator *devm_regulator_get_optional(struct device *dev, const char *id)
-{
-	lx_emul_trace_and_stop(__func__);
-}
-
 

@@ -582,15 +582,38 @@ void __init wait_bit_init(void)
 }
 
 
-int imx_usbmisc_set_wakeup(struct imx_usbmisc_data *data, bool enabled)
+#include <linux/gpio/consumer.h>
+
+struct gpio_desc * __must_check devm_gpiod_get_optional(struct device * dev,const char * con_id,enum gpiod_flags flags)
 {
 	lx_emul_trace(__func__);
-	return 0;
+	return NULL;
 }
 
 
-int imx_usbmisc_hsic_set_clk(struct imx_usbmisc_data *data, bool on)
+#include <linux/regulator/consumer.h>
+
+struct regulator * devm_regulator_get_optional(struct device * dev,const char * id)
 {
 	lx_emul_trace(__func__);
-	return 0;
+	return NULL;
 }
+
+
+#include <linux/pinctrl/consumer.h>
+
+struct pinctrl * devm_pinctrl_get(struct device * dev)
+{
+	lx_emul_trace(__func__);
+	return NULL;
+}
+
+
+#include <linux/pinctrl/consumer.h>
+
+struct pinctrl_state * pinctrl_lookup_state(struct pinctrl * p,const char * name)
+{
+	lx_emul_trace(__func__);
+	return NULL;
+}
+
