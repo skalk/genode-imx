@@ -27,7 +27,7 @@ namespace Spi {
 /**
  * \attention Keep in mind that on ARM a word usually refer to 4 bytes.
  */
-struct Spi::Mmio: Platform::Device::Mmio
+struct Spi::Mmio: Platform::Device::Mmio<56>
 {
 	/**
 	 * \attention Data registers must be accessed via word operation.
@@ -97,7 +97,7 @@ struct Spi::Mmio: Platform::Device::Mmio
 		struct Loop_back_ctl   : Test_register::Bitfield<31, 1> { };
 	};
 
-	explicit Mmio(Platform::Device &device): Platform::Device::Mmio { device } { }
+	explicit Mmio(Platform::Device &device): Platform::Device::Mmio<56> { device } { }
 
 };
 
