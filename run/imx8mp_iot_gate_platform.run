@@ -1,0 +1,59 @@
+assert_spec arm_v8a
+
+create_boot_directory
+import_from_depot [depot_user]/src/[base_src] \
+                  [depot_user]/src/init \
+                  [depot_user]/src/imx8mp_platform \
+                  [depot_user]/src/dynamic_rom \
+                  [depot_user]/raw/imx8mp_iot_gate-devices
+
+install_config {
+<config>
+	<parent-provides>
+		<service name="ROM"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="IO_PORT"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="CPU"/>
+		<service name="LOG"/>
+	</parent-provides>
+	<default-route>
+		<any-service> <parent/> <any-child/> </any-service>
+	</default-route>
+	<default caps="100"/>
+
+	<start name="timer">
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Timer"/></provides>
+	</start>
+
+	<start name="dynamic_rom">
+		<resource name="RAM" quantum="2M"/>
+		<provides> <service name="ROM"/> </provides>
+		<config verbose="yes">
+			<rom name="system">
+				<inline description="poweron"><system state=""/></inline>
+				<sleep milliseconds="8000"/>
+				<inline description="reset"><system state="reset"/></inline>
+				<sleep milliseconds="1000"/>
+			</rom>
+		</config>
+	</start>
+	
+	<start name="platform" caps="150" managing_system="yes">
+		<binary name="imx8mp_platform"/>
+		<resource name="RAM" quantum="2M"/>
+		<provides> <service name="Platform"/> </provides>
+		<config verbose="yes"/>
+		<route>
+			<service name="ROM" label="system"> <child name="dynamic_rom"/> </service>
+			<any-service> <parent/> </any-service>
+		</route>
+	</start>
+
+</config>}
+
+build_boot_image [build_artifacts]
+run_genode_until forever
