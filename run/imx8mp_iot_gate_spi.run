@@ -1,0 +1,76 @@
+assert_spec arm_v8a
+
+create_boot_directory
+import_from_depot [depot_user]/src/[base_src] \
+                  [depot_user]/src/imx8mp_platform \
+                  [depot_user]/src/init \
+                  [depot_user]/src/libc \
+                  [depot_user]/src/posix \
+                  [depot_user]/src/stdcxx \
+                  [depot_user]/src/vfs \
+                  [depot_user]/src/vfs_spi \
+                  [depot_user]/raw/imx8mp_iot_gate-devices
+
+build { test/spi }
+
+install_config  {
+<config>
+	<parent-provides>
+		<service name="CPU"/>
+		<service name="IRQ"/>
+		<service name="IO_MEM"/>
+		<service name="LOG"/>
+		<service name="PD"/>
+		<service name="RM"/>
+		<service name="ROM"/>
+	</parent-provides>
+
+	<default-route>
+		<any-service> <parent/> <any-child/> </any-service>
+	</default-route>
+
+	<default caps="100"/>
+
+	<start name="timer">
+		<resource name="RAM" quantum="1M"/>
+		<provides><service name="Timer"/></provides>
+	</start>
+
+	<start name="platform_drv" caps="800" managing_system="yes">
+		<binary name="imx8mp_platform"/>
+		<resource name="RAM" quantum="4M"/>
+		<provides>
+			<service name="Platform"/>
+		</provides>
+		<config>
+			<policy label_prefix="test-spi"> <device name="ecspi2"/> </policy>
+		</config>
+	</start>
+
+	<start name="test-spi" caps="200">
+		<resource name="RAM" quantum="5M"/>
+		<config>
+			<arg value="test-trust_anchor"/>
+			<env key="TERM" value="screen"/>
+			<libc stdout="/dev/log" stderr="/dev/log" rtc="/dev/rtc"/>
+			<vfs>
+				<dir name="dev">
+					<log/>
+					<inline name="rtc">2022-01-01 00:01</inline>
+					<spi-imx8 name="shiftregister" verbose="yes" loopback="yes"/>
+				</dir>
+			</vfs>
+		</config>
+	</start>
+
+</config>
+}
+
+# create simple system state ROM
+set fd [open [run_dir]/genode/system w]
+puts $fd { <system state=""/> }
+close $fd
+
+build_boot_image [build_artifacts]
+
+run_genode_until "SPI shift register test succeed!" 30

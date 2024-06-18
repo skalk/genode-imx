@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (C) 2013-2021 Genode Labs GmbH
+ * Copyright (C) 2013-2024 Genode Labs GmbH
  * Copyright (C) 2021 gapfruit AG
  *
  * This file is part of the Genode OS framework, which is distributed
@@ -13,25 +13,38 @@
  */
 
 /* std includes */
+#include <cstring>
 #include <dirent.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
-#include <gtest/gtest.h>
-#include <gtest_component/gtest_component.h>
-
 namespace Spi {
-
-	using namespace Genode;
-
-	struct Main;
+	struct Assertion_failed {};
 
 	constexpr char const * device = "/dev/shiftregister";
-
 }
 
-TEST(Vfs_spi, Shiftregister_device_exposure)
+
+#define ASSERT_NE(a, b) \
+{ \
+	if (a == b) { \
+		std::cout << "Assertion failed on line: " << __LINE__ << std::endl; \
+		throw Spi::Assertion_failed(); \
+	} \
+}
+
+
+#define ASSERT_EQ(a, b) \
+{ \
+	if (a != b) { \
+		std::cout << "Assertion failed on line: " << __LINE__ << std::endl; \
+		throw Spi::Assertion_failed(); \
+	} \
+}
+
+
+static void shiftregister_device_exposure()
 {
 	DIR           *dir;
 	struct dirent *dir_entry;
@@ -40,11 +53,11 @@ TEST(Vfs_spi, Shiftregister_device_exposure)
 	ASSERT_NE(dir, nullptr);
 
 	dir_entry = readdir(dir);
-	ASSERT_EQ(strcmp(dir_entry->d_name, "shiftregister"), 0);
+	ASSERT_EQ(std::strcmp(dir_entry->d_name, "shiftregister"), 0);
 	closedir(dir);
 }
 
-TEST(Vfs_spi, Shiftregister_small_label)
+static void shiftregister_small_label()
 {
 	static constexpr char const small_label[] = { "Hello friend!" };
 	char buffer[sizeof(small_label)] = { "" };
@@ -56,8 +69,17 @@ TEST(Vfs_spi, Shiftregister_small_label)
 	device.read(buffer, sizeof(buffer));
 	std::cout << small_label << std::endl;
 	std::cout << buffer << std::endl;
-	ASSERT_EQ(strcmp(small_label, buffer), 0);
+	ASSERT_EQ(std::strcmp(small_label, buffer), 0);
 
 	device.close();
 	ASSERT_NE(device.is_open(), true);
+}
+
+
+int main(int, char **)
+{
+	std::cout << "SPI test started ... " <<  std::endl;
+	shiftregister_device_exposure();
+	shiftregister_small_label();
+	std::cout << "SPI shift register test succeed!" <<  std::endl;
 }
