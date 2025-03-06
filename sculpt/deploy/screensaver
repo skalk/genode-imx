@@ -1,0 +1,24 @@
+<config arch="arm_v8a" info="Embedded World 2025">
+
+	<common_routes>
+		<service name="ROM" label_last="ld.lib.so"> <parent/> </service>
+		<service name="ROM" label_last="init">      <parent/> </service>
+		<service name="CPU">   <parent/> </service>
+		<service name="PD">    <parent/> </service>
+		<service name="LOG">   <parent/> </service>
+		<service name="Timer"> <parent/> </service>
+	</common_routes>
+
+	<start name="black_hole" pkg="black_hole"/>
+
+	<start name="screensaver" pkg="screensaver" cpu="60">
+		<affinity xpos="0" width="4"/>
+		<route>
+			<service name="Gui">  <parent label="focus"/> </service>
+			<service name="Play"> <child name="black_hole"/> </service>
+			<any-service> <parent/> <any-child/> </any-service>
+		</route>
+	</start>
+
+</config>
+
