@@ -4,8 +4,14 @@ drivers: imx8q_evk
 import: pkg/sculpt_drivers-imx8q_evk
 
 # selection of launcher-menu entries
-launcher: download_debug_info black_hole trace_logger recall_fs
+launcher: black_hole
 
-presets: empty nano3d window_manager falkon_web_browser
+presets: empty screensaver
 
 depot: genodelabs cnuke alex-ab nfeske cproc chelmuth jschlatow ssumpf skalk
+
+build: app/sculpt_manager
+
+manager: use_ram_fs
+
+ram_fs: depot
