@@ -1,0 +1,42 @@
+<runtime ram="384M" caps="400" binary="avplay">
+
+	<requires>
+		<gui/>
+		<play/>
+		<timer/>
+	</requires>
+
+	<content>
+		<rom label="avcodec.lib.so"/>
+		<rom label="avdevice.lib.so"/>
+		<rom label="avfilter.lib.so"/>
+		<rom label="avformat.lib.so"/>
+		<rom label="avplay"/>
+		<rom label="avresample.lib.so"/>
+		<rom label="avutil.lib.so"/>
+		<rom label="mediafile"/>
+		<rom label="libc.lib.so"/>
+		<rom label="libm.lib.so"/>
+		<rom label="sdl.lib.so"/>
+		<rom label="swscale.lib.so"/>
+		<rom label="vfs.lib.so"/>
+		<rom label="vfs_oss.lib.so"/>
+		<rom label="zlib.lib.so"/>
+	</content>
+
+	<config ld_verbose="yes">
+		<arg value="avplay"/>
+		<arg value="-loop"/>
+		<arg value="0"/>
+		<arg value="mediafile"/>
+		<libc rtc="/dev/rtc" stdout="/dev/log" stderr="/dev/log"/>
+		<vfs>
+			<dir name="dev">
+				<log/> <inline name="rtc">2000-01-01 00:00</inline>
+				<oss name="dsp" record_enabled="false"/>
+			</dir>
+			<rom name="mediafile"/>
+		</vfs>
+	</config>
+
+</runtime>
