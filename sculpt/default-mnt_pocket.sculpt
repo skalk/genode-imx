@@ -1,5 +1,7 @@
 drivers: mnt_pocket
 event_filter: mnt_pocket
+manager: use_ram_fs
+ram_fs: depot
 
 # supplemental depot content added to the system image
 import: pkg/sculpt_drivers-mnt_pocket
@@ -7,7 +9,7 @@ import: pkg/sculpt_drivers-mnt_pocket
 # selection of launcher-menu entries
 launcher: download_debug_info black_hole trace_logger recall_fs mixer system_clock
 
-presets: empty nano3d window_manager falkon_web_browser
+presets: empty nano3d window_manager screensaver
 
 depot: genodelabs cnuke alex-ab nfeske cproc chelmuth jschlatow ssumpf skalk
 
